@@ -162,6 +162,13 @@
           </div>
         </div>
       </div>
+      <!-- Tambahkan di dalam kartu, di atas progress bar atau di bawah target dana -->
+<div class="flex items-center gap-2 mt-2 bg-blue-50 p-2 rounded-xl">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z" />
+  </svg>
+  <span class="text-[10px] font-black text-blue-700 uppercase">{{ c.bank_name }} : {{ c.account_number }}</span>
+</div>
     </section>
 
     <!-- ==========================================
@@ -243,6 +250,24 @@
                   />
                 </div>
               </div>
+              <!-- Input Informasi Rekening (BARU) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-6">
+  <div class="space-y-3 md:col-span-2">
+     <h4 class="text-xs font-black text-blue-600 uppercase tracking-widest">Pengaturan Rekening Donasi</h4>
+  </div>
+  <div class="space-y-3">
+    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Nama Bank / E-Wallet</label>
+    <input v-model="form.bank_name" type="text" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-blue-500 font-bold" placeholder="Contoh: BSI / Dana" required />
+  </div>
+  <div class="space-y-3">
+    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Nomor Rekening</label>
+    <input v-model="form.account_number" type="text" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-blue-500 font-bold" placeholder="000111222" required />
+  </div>
+  <div class="space-y-3 md:col-span-2">
+    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Atas Nama (A/N)</label>
+    <input v-model="form.account_holder" type="text" class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:border-blue-500 font-bold" placeholder="Nama lengkap pemilik rekening" required />
+  </div>
+</div>
 
               <div class="flex gap-4 pt-6">
                 <button type="button" @click="showModal = false" class="flex-1 py-5 font-bold text-gray-400 hover:text-gray-900">Batal</button>
@@ -282,7 +307,10 @@ const form = reactive({
   title: '',
   description: '',
   foto: '',
-  target_amount: ''
+  target_amount: '',
+  bank_name: '',
+  account_number: '',
+  account_holder: ''
 });
 
 const totalManagedFunds = computed(() => {
@@ -296,6 +324,10 @@ const openModal = () => {
   form.description = '';
   form.foto = '';
   form.target_amount = '';
+  // TAMBAHKAN INI:
+  form.bank_name = '';
+  form.account_number = '';
+  form.account_holder = '';
   showModal.value = true;
 };
 

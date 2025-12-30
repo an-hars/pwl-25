@@ -1,10 +1,7 @@
 /**
  * Entry Point Utama - Website Donasi Kemanusiaan
- * PERBAIKAN: Menambahkan limit payload agar foto Base64 bisa terkirim.
+ * PERBAIKAN: Menyeimbangkan rute API dan memastikan limit payload cukup untuk foto Base64.
  */
-const apiRoutes = require('./routes/api');
-
-const adminRoutes = require('./routes/adminRoutes');
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -13,32 +10,51 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const campaignRoutes = require('./routes/campaignRoutes');
 const donationRoutes = require('./routes/donationRoutes');
-
+const adminRoutes = require('./routes/adminRoutes');
+const apiRoutes = require('./routes/api');
 
 const app = express();
 
 // Global Middleware
-// PERBAIKAN: Limit ditingkatkan ke 50mb agar data foto tidak ditolak server
+// Limit ditingkatkan ke 50mb agar data foto (Base64) tidak ditolak server (Error 413)
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
-// --- Definisi Route ---
+/**
+ * --- Definisi Route ---
+ */
+
+// Route Spesifik - Pastikan rute admin berada di atas rute global api
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes); // Mengendalikan /api/admin/dashboard-stats
 app.use('/api/campaigns', campaignRoutes);
 app.use('/api/donations', donationRoutes);
-app.use('/api/admin', adminRoutes);
+
+// Global API Route (Hanya jika tidak ditangani rute spesifik di atas)
 app.use('/api', apiRoutes);
+
 // Root test route
 app.get('/', (req, res) => {
     res.send('API Humanity Care is Running...');
+});
+
+// Handling 404 Not Found
+app.use((req, res) => {
+    console.log(`[404] Request ke: ${req.originalUrl}`);
+    res.status(404).json({
+        message: `Endpoint ${req.originalUrl} tidak ditemukan di server.`,
+        success: false,
+        hint: "Periksa apakah Anda memanggil /api/admin/dashboard-stats atau /api/admin/stats"
+    });
 });
 
 // Port Handling
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`========================================`);
-    console.log(`Server berjalan di: http://localhost:${PORT}`);
-    console.log(`Payload Limit: 50MB (Foto Aktif)`);
+    console.log(`🚀 Server berjalan di: http://localhost:${PORT}`);
+    console.log(`📸 Payload Limit: 50MB (Siap menerima foto)`);
+    console.log(`📊 Stats Admin: http://localhost:${PORT}/api/admin/dashboard-stats`);
     console.log(`========================================`);
-}); 
+});

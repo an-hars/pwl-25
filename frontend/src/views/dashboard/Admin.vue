@@ -185,7 +185,7 @@
                       'px-4 py-1.5 rounded-xl text-[10px] font-black tracking-widest uppercase',
                       user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
                     ]">
-                      {{ user.role === 'field_worker' ? 'FIELD STAFF' : user.role }}
+                      {{ user.role === 'field_worker' ? 'field_worker' : user.role }}
                     </span>
                   </td>
                   <td class="px-8 py-6 text-center">
@@ -300,7 +300,7 @@
               <div>
                 <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">Role Akses</label>
                 <select v-model="formData.role" class="w-full bg-gray-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-bold text-gray-700 appearance-none">
-                  <option value="staff">Petugas Lapangan</option>
+                  <option value="field_worker">Petugas Lapangan</option>
                   <option value="admin">Administrator</option>
                 </select>
               </div>
@@ -366,7 +366,7 @@ const tabs = [
   { id: 'donors', label: 'Pengkalan Donatur', icon: HeartIcon }
 ];
 
-const formData = reactive({ name: '', email: '', password: '', role: 'staff' });
+const formData = reactive({ name: '', email: '', password: '', role: 'field_worker' });
 const formLoading = ref(false);
 const message = reactive({ text: '', type: '' });
 
